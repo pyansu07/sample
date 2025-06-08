@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Container, Form, Button, Spinner, Alert } from 'react-bootstrap'
+import { Container, Spinner } from 'react-bootstrap'
 import { trpc } from '@/trpc/client'
 import { Message } from '@/types/chat'
 import { InputArea } from './InputArea'
+import Image from 'next/image'
 
 interface ChatInterfaceProps {
   chatId: string
@@ -69,7 +70,7 @@ export function ChatInterface({ chatId, onError }: ChatInterfaceProps) {
 
     try {
       setIsLoading(true)
-      
+
       // Add user message
       await addMessageMutation.mutateAsync({
         chatId,
@@ -111,7 +112,7 @@ export function ChatInterface({ chatId, onError }: ChatInterfaceProps) {
 
     try {
       setIsLoading(true)
-      
+
       // Add user message
       await addMessageMutation.mutateAsync({
         chatId,
@@ -162,7 +163,7 @@ export function ChatInterface({ chatId, onError }: ChatInterfaceProps) {
             <p>Send a message or generate an image to begin</p>
           </div>
         )}
-        
+
         {messages.map((message) => (
           <div
             key={message.id}
@@ -183,41 +184,34 @@ export function ChatInterface({ chatId, onError }: ChatInterfaceProps) {
                 <strong>Debug:</strong> Type: {message.message_type}, URL: {message.image_url || 'No URL'}
               </div>
             )}
-            
+
             {/* Image display */}
             {message.message_type === 'image' && message.image_url && (
-              <div className="mb-2">
-                <img
+              <div className="mb-2 position-relative" style={{ width: '100%', height: '300px' }}>
+                <Image
                   src={message.image_url}
                   alt="Generated content"
-                  className="img-fluid rounded"
-                  style={{ 
-                    maxWidth: '100%', 
-                    height: 'auto',
-                    minHeight: '150px',
+                  fill
+                  className="rounded"
+                  style={{
+                    objectFit: 'contain',
                     backgroundColor: '#e9ecef',
                     border: '1px solid #dee2e6'
-                  }}
-                  onLoad={() => console.log('Image loaded successfully:', message.image_url)}
-                  onError={(e) => {
-                    console.error('Image failed to load:', message.image_url)
-                    // Show placeholder if image fails
-                    e.currentTarget.src = `https://via.placeholder.com/400x300/6c757d/ffffff?text=${encodeURIComponent('Image Not Available')}`
                   }}
                 />
               </div>
             )}
-            
+
             {/* Text content */}
             <div>{message.content}</div>
-            
+
             {/* Timestamp */}
             <div style={{ fontSize: '0.75em', opacity: 0.6, marginTop: '0.5rem' }}>
               {new Date(message.created_at).toLocaleTimeString()}
             </div>
           </div>
         ))}
-        
+
         {/* Loading indicator */}
         {isLoading && (
           <div className="message assistant-message" style={{
@@ -234,7 +228,7 @@ export function ChatInterface({ chatId, onError }: ChatInterfaceProps) {
             <span>AI is thinking...</span>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { Card } from 'react-bootstrap'
+import Image from 'next/image'
 
 interface Message {
   id: string
@@ -17,21 +18,22 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message }: MessageBubbleProps) {
   const isUser = message.role === 'user'
-  
+
   return (
     <div className={`d-flex ${isUser ? 'justify-content-end' : 'justify-content-start'} mb-3`}>
-      <Card 
+      <Card
         className={`message-bubble ${isUser ? 'message-user' : 'message-assistant'}`}
         style={{ maxWidth: '85%' }}
       >
         <Card.Body className="p-3">
           {message.message_type === 'image' && message.image_url && (
-            <div className="mb-2">
-              <img 
-                src={message.image_url} 
+            <div className="mb-2 position-relative" style={{ width: '100%', height: '300px' }}>
+              <Image
+                src={message.image_url}
                 alt="Generated content"
-                className="img-fluid rounded"
-                style={{ maxWidth: '100%', height: 'auto' }}
+                fill
+                className="rounded"
+                style={{ objectFit: 'contain' }}
               />
             </div>
           )}

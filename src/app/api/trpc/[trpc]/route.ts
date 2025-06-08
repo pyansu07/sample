@@ -9,15 +9,14 @@ const handler = async (req: Request) => {
       req,
       router: appRouter,
       createContext: () => createContext(),
-      onError:
-        process.env.NODE_ENV === 'development'
-          ? ({ path, error }) => {
-            console.error(
-              `❌ tRPC failed on ${path ?? '<no-path>'}: ${error.message}`,
-              error.stack
-            )
-          }
-          : undefined,
+      onError: process.env.NODE_ENV === 'development'
+        ? ({ path, error }: { path: string | undefined; error: Error }) => {
+          console.error(
+            `❌ tRPC failed on ${path ?? '<no-path>'}: ${error.message}`,
+            error.stack
+          );
+        }
+        : undefined,
     })
 
     if (!response.headers.get('content-type')?.includes('application/json')) {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
-    const { login, logout, isAuthenticated, user } = useAuth();
+    const { logout, isAuthenticated, user } = useAuth();
     const router = useRouter();
 
     return (

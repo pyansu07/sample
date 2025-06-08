@@ -15,6 +15,12 @@ declare module '@trpc/server' {
 }
 
 declare module 'superjson' {
-    const superjson: any
+    interface SuperJSON {
+        parse<T>(json: string): T
+        stringify<T>(value: T): string
+        serialize<T>(value: T): { json: string; meta?: unknown }
+        deserialize<T>(value: { json: string; meta?: unknown }): T
+    }
+    const superjson: SuperJSON
     export default superjson
 } 

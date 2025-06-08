@@ -5,26 +5,30 @@ import { Container, Row, Col, Button, Alert } from 'react-bootstrap'
 import { trpc } from '@/trpc/client'
 import { ChatInterface } from '@/components/ui/ChatInterface'
 
+interface Chat {
+  id: string
+}
+
 export default function ChatPage() {
   const [error, setError] = useState<string | null>(null)
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null)
 
-  const { data: chats, isLoading: isLoadingChats, error: chatsError } = trpc.chat.getChats.useQuery(undefined, {
+  const { isLoading: isLoadingChats, error: chatsError } = trpc.chat.getChats.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error('Error loading chats:', error)
       setError('Failed to load chats')
     }
   })
 
   const createChatMutation = trpc.chat.createChat.useMutation({
-    onSuccess: (newChat) => {
+    onSuccess: (newChat: Chat) => {
       setSelectedChatId(newChat.id)
       setError(null)
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error('Error creating chat:', error)
       setError('Failed to create new chat')
     }

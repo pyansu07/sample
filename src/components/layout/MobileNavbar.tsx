@@ -1,6 +1,6 @@
 'use client'
 
-import { Navbar, Nav, Button, Offcanvas, ListGroup } from 'react-bootstrap'
+import { Navbar, Button, Offcanvas, ListGroup } from 'react-bootstrap'
 import { useState } from 'react'
 import { trpc } from '@/trpc/client'
 
